@@ -37,6 +37,7 @@
                 <input asp-for="ShowType" class="form-control" />
                 <span asp-validation-for="ShowType" class="text-danger"></span>
             </div>
+            <select asp-for="Team" asp-items="@(new SelectList(ViewBag.TeamList, "Id", "TeamName"))" ></select>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
