@@ -15,7 +15,12 @@ namespace MvcTheater.Models{
         [Display(Name="FavoriteMovie")]
         [DisplayFormat(NullDisplayText="No Favorite Movie")]
         public string? FavoriteMovie{get; set;}
-        public Team Team{get; set;}
+
+        
+        public Team?  Team{get; set;}
+        public string toString(){
+            return FirstName+" "+LastName+" "+Age+" "+Country+" "+FavoriteMovie;
+        }
 
     }
 }

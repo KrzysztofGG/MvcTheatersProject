@@ -41,7 +41,7 @@ namespace MvcTheater.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TeamId")
+                    b.Property<int?>("TeamId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -64,12 +64,12 @@ namespace MvcTheater.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("showId")
+                    b.Property<int>("ShowId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("showId");
+                    b.HasIndex("ShowId");
 
                     b.ToTable("Opinion");
                 });
@@ -97,7 +97,7 @@ namespace MvcTheater.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TeamId")
+                    b.Property<int?>("TeamId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -129,31 +129,27 @@ namespace MvcTheater.Migrations
                 {
                     b.HasOne("MvcTheater.Models.Team", "Team")
                         .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TeamId");
 
                     b.Navigation("Team");
                 });
 
             modelBuilder.Entity("MvcTheater.Models.Opinion", b =>
                 {
-                    b.HasOne("MvcTheater.Models.Show", "show")
+                    b.HasOne("MvcTheater.Models.Show", "Show")
                         .WithMany()
-                        .HasForeignKey("showId")
+                        .HasForeignKey("ShowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("show");
+                    b.Navigation("Show");
                 });
 
             modelBuilder.Entity("MvcTheater.Models.Show", b =>
                 {
                     b.HasOne("MvcTheater.Models.Team", "Team")
                         .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TeamId");
 
                     b.Navigation("Team");
                 });

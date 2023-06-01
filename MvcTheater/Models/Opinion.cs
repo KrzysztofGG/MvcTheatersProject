@@ -8,7 +8,8 @@ namespace MvcTheater.Models{
         public bool IsPositive{get; set;}
         [Display(Name="Opinion text")]
         public string OpinionText{get; set;}
-        public Show show{get; set;}
+        [Required]
+        public Show? Show{get; set;}
 
     }
 }

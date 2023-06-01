@@ -22,7 +22,11 @@ namespace MvcTheater.Controllers
         // GET: Opinion
         public async Task<IActionResult> Index()
         {
-              return _context.Opinion != null ? 
+            
+            foreach(var o in _context.Opinion.ToList()){
+                Console.WriteLine(o.Show);
+            }
+            return _context.Opinion != null ? 
                           View(await _context.Opinion.ToListAsync()) :
                           Problem("Entity set 'MvcActorContext.Opinion'  is null.");
         }
@@ -48,6 +52,7 @@ namespace MvcTheater.Controllers
         // GET: Opinion/Create
         public IActionResult Create()
         {
+            ViewBag.ShowList=_context.Show.ToList();
             return View();
         }
 
@@ -56,12 +61,15 @@ namespace MvcTheater.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IsPositive,OpinionText")] Opinion opinion)
+        public async Task<IActionResult> Create([Bind("Id,IsPositive,OpinionText")] Opinion opinion,IFormCollection form)
         {
+            String showId=form["Show"];
+            Show show=_context.Show.Where(s=>s.Id==int.Parse(showId)).First();
             if (ModelState.IsValid)
             {
+                opinion.Show=show;
                 _context.Add(opinion);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(opinion);
