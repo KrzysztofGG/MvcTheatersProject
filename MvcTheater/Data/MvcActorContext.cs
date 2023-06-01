@@ -18,7 +18,7 @@ namespace MvcActor.Data
         public DbSet<MvcTheater.Models.Team> Team { get; set; } = default!;
         public DbSet<MvcTheater.Models.Show> Show { get; set; } = default!;
         public DbSet<MvcTheater.Models.Opinion> Opinion { get; set; } = default!;
-        
+        public DbSet<MvcTheater.Models.User> User { get; set; } = default!;
 
     }
 }

@@ -10,99 +10,108 @@ using MvcTheater.Models;
 
 namespace MvcTheater.Controllers
 {
-    public class OpinionController : Controller
+    public class UserController : Controller
     {
-        private readonly MvcActorContext _context;
 
-        public OpinionController(MvcActorContext context)
+    private static Random random = new Random();
+
+    public static string RandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+    private readonly MvcActorContext _context;
+
+        public UserController(MvcActorContext context)
         {
             _context = context;
         }
 
-        // GET: Opinion
+        // GET: User
         public async Task<IActionResult> Index()
         {
-            
-            foreach(var o in _context.Opinion.ToList()){
-                Console.WriteLine(o.Show==null);
-            }
-            return _context.Opinion != null ? 
-                          View(await _context.Opinion.ToListAsync()) :
-                          Problem("Entity set 'MvcActorContext.Opinion'  is null.");
+              return _context.User != null ? 
+                          View(await _context.User.ToListAsync()) :
+                          Problem("Entity set 'MvcUserContext.User'  is null.");
         }
 
-        // GET: Opinion/Details/5
+        // GET: User/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Opinion == null)
+            if (id == null || _context.User == null)
             {
                 return NotFound();
             }
 
-            var opinion = await _context.Opinion
+            var user = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (opinion == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(opinion);
+            return View(user);
         }
 
-        // GET: Opinion/Create
+        // GET: User/Create
         public IActionResult Create()
         {
-            ViewBag.ShowList=_context.Show.ToList();
             return View();
         }
 
-        // POST: Opinion/Create
+
+
+        // POST: User/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IsPositive,OpinionText")] Opinion opinion,IFormCollection form)
+        public async Task<IActionResult> Create([Bind("Login,Password")] User user)
         {
-            
-            String showId=form["Show"];
-            Console.WriteLine(showId);
-            Console.WriteLine("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-            Show show=_context.Show.Where(s=>s.Id==int.Parse(showId)).First();
-            Console.WriteLine(show.ShowName+" Tworzenie -----------------------");
-            if (ModelState.IsValid)
-            {
-                opinion.Show=show;
-                _context.Add(opinion);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+            var errors = ModelState.Where(x => x.Value.Errors.Any())
+                .Select(x => new { x.Key, x.Value.Errors });
+            foreach(var e in errors){
+                Console.WriteLine(e);
             }
-            return View(opinion);
+
+            if(ModelState.IsValid){
+                String apiKey=RandomString(8);
+                Console.WriteLine(apiKey);
+                user.APIKey=apiKey;
+                _context.Add(user);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(Index));
+            
+            // return View(user);
         }
 
-        // GET: Opinion/Edit/5
+        // GET: User/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Opinion == null)
+            if (id == null || _context.User == null)
             {
                 return NotFound();
             }
 
-            var opinion = await _context.Opinion.FindAsync(id);
-            if (opinion == null)
+            var user = await _context.User.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            return View(opinion);
+            return View(user);
         }
 
-        // POST: Opinion/Edit/5
+        // POST: User/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IsPositive,OpinionText")] Opinion opinion)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Age,Country,FavoriteMovie")] User user)
         {
-            if (id != opinion.Id)
+            if (id != user.Id)
             {
                 return NotFound();
             }
@@ -111,12 +120,12 @@ namespace MvcTheater.Controllers
             {
                 try
                 {
-                    _context.Update(opinion);
+                    _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OpinionExists(opinion.Id))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -127,49 +136,49 @@ namespace MvcTheater.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(opinion);
+            return View(User);
         }
 
-        // GET: Opinion/Delete/5
+        // GET: User/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Opinion == null)
+            if (id == null || _context.User == null)
             {
                 return NotFound();
             }
 
-            var opinion = await _context.Opinion
+            var user = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (opinion == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(opinion);
+            return View(user);
         }
 
-        // POST: Opinion/Delete/5
+        // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Opinion == null)
+            if (_context.User == null)
             {
-                return Problem("Entity set 'MvcActorContext.Opinion'  is null.");
+                return Problem("Entity set 'MvcUserContext.User'  is null.");
             }
-            var opinion = await _context.Opinion.FindAsync(id);
-            if (opinion != null)
+            var user = await _context.User.FindAsync(id);
+            if (user != null)
             {
-                _context.Opinion.Remove(opinion);
+                _context.User.Remove(user);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OpinionExists(int id)
+        private bool UserExists(int id)
         {
-          return (_context.Opinion?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.User?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

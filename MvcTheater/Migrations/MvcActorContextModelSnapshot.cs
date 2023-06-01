@@ -64,7 +64,7 @@ namespace MvcTheater.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ShowId")
+                    b.Property<int?>("ShowId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -125,6 +125,26 @@ namespace MvcTheater.Migrations
                     b.ToTable("Team");
                 });
 
+            modelBuilder.Entity("MvcTheater.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("APIKey")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Login")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("User");
+                });
+
             modelBuilder.Entity("MvcTheater.Models.Actor", b =>
                 {
                     b.HasOne("MvcTheater.Models.Team", "Team")
@@ -138,9 +158,7 @@ namespace MvcTheater.Migrations
                 {
                     b.HasOne("MvcTheater.Models.Show", "Show")
                         .WithMany()
-                        .HasForeignKey("ShowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShowId");
 
                     b.Navigation("Show");
                 });
