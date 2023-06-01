@@ -48,6 +48,7 @@ namespace MvcTheater.Controllers
         // GET: Show/Create
         public IActionResult Create()
         {
+            ViewBag.TeamList=_context.Team.ToList();
             return View();
         }
 
@@ -56,12 +57,16 @@ namespace MvcTheater.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ShowName,ShowDate,ShowTime,ShowPrice,ShowType")] Show show)
+        public async Task<IActionResult> Create([Bind("Id,ShowName,ShowDate,ShowTime,ShowPrice,ShowType")] Show show,IFormCollection form)
         {
+            String teamId=form["Team"];
+            Team team=_context.Team.Where(t=>t.Id==int.Parse(teamId)).First();
             if (ModelState.IsValid)
             {
+                show.Team=team;
                 _context.Add(show);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(show);

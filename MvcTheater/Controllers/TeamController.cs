@@ -58,8 +58,10 @@ namespace MvcTheater.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TeamName,TeamSize")] Team team)
         {
+            Console.WriteLine("sdss");
             if (ModelState.IsValid)
             {
+                Console.WriteLine("valid");
                 _context.Add(team);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

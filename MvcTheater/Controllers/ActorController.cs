@@ -48,6 +48,7 @@ namespace MvcTheater.Controllers
         // GET: Actor/Create
         public IActionResult Create()
         {
+            ViewBag.TeamList=_context.Team.ToList();
             return View();
         }
 
@@ -56,15 +57,30 @@ namespace MvcTheater.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Age,Country,FavoriteMovie")] Actor actor)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Age,Country,FavoriteMovie")] Actor actor,IFormCollection form)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(actor);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            Console.WriteLine(actor.toString());
+            String teamId=form["Team"];
+            // Console.WriteLine(teamId);
+            Team team=_context.Team.Where(t=>t.Id==int.Parse(teamId)).First();
+            actor.Team=team;
+            // await _context.SaveChangesAsync();
+            var errors = ModelState.Where(x => x.Value.Errors.Any())
+                .Select(x => new { x.Key, x.Value.Errors });
+            foreach(var e in errors){
+                Console.Write(e);
             }
-            return View(actor);
+            if (ModelState.IsValid){
+                Console.WriteLine("WWWWWWWWWWWWWWWW");
+                actor.Team=team;
+                _context.Add(actor);
+                _context.SaveChanges();
+                // await _context.SaveChangesAsync();
+            }
+            
+            return RedirectToAction(nameof(Index));
+            
+            // return View(actor);
         }
 
         // GET: Actor/Edit/5
