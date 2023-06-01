@@ -14,7 +14,7 @@ namespace MvcTheater.Models{
         public string Country{get; set;}
         [Display(Name="FavoriteMovie")]
         [DisplayFormat(NullDisplayText="No Favorite Movie")]
-        public string? FavoriteMovie{get; set;}
+        public string? FavouriteMovie{get; set;}
         public Team Team{get; set;}
 
     }
