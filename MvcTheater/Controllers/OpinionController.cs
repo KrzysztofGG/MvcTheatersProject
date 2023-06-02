@@ -27,7 +27,7 @@ namespace MvcTheater.Controllers
                 Console.WriteLine(o.Show==null);
             }
             return _context.Opinion != null ? 
-                          View(await _context.Opinion.ToListAsync()) :
+                          View(await _context.Opinion.Include(o => o.Show).ToListAsync()) :
                           Problem("Entity set 'MvcActorContext.Opinion'  is null.");
         }
 
@@ -61,7 +61,7 @@ namespace MvcTheater.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IsPositive,OpinionText")] Opinion opinion,IFormCollection form)
+        public async Task<IActionResult> Create([Bind("Id,IsPositive,OpinionText")] Opinion opinion, IFormCollection form)
         {
             
             String showId=form["Show"];
