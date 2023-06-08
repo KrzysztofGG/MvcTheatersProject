@@ -39,7 +39,8 @@ public class HomeController : Controller
 
     [HttpPost]
     public IActionResult LoginForm(IFormCollection form){
-        if(form["login"]=="admin"&&form["haslo"]=="admin"){
+        
+        if(form["login"]=="admin"&&form["password"]=="admin"){
             HttpContext.Session.SetString("logged_in", "True");
             HttpContext.Session.SetString("admin", "True");
             admin=true;
@@ -49,12 +50,13 @@ public class HomeController : Controller
 
 
         String userId=form["login"];
-        
-        if(!_context.User.Any(u=>u.Login==userId)){
-            return RedirectToAction("Login");
-        }
-
+        String password=form["password"];
+        Console.WriteLine("---------------------------------------");
+        // var user=!_context.User.(u=>u.Login==userId).FirstOrDefault()
         var user=_context.User.Where(u=>u.Login==userId).First();
+        Console.WriteLine(user.Login);
+        Console.WriteLine(user.Password);
+        Console.WriteLine(password+"@@@@");
         if(user.Password==form["password"]){
             HttpContext.Session.SetString("logged_in", "True");
             HttpContext.Session.SetString("admin", "False");
@@ -62,10 +64,6 @@ public class HomeController : Controller
             return RedirectToAction("Index");
 
         }
-      
- 
-
-
         return RedirectToAction("Login");
         
         
