@@ -20,11 +20,38 @@ namespace MvcTheater.Controllers
         }
 
         // GET: Show
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
-              return _context.Show != null ? 
-                          View(await _context.Show.ToListAsync()) :
-                          Problem("Entity set 'MvcActorContext.Show'  is null.");
+            ViewBag.NameSortParam = String.IsNullOrEmpty(sortOrder) ? "Name" : "";
+            ViewBag.DateSortParam = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewBag.PriceSortParam = sortOrder == "Price" ? "price_desc" : "Price";
+            var shows = from s in _context.Show
+                        select s;
+            
+            switch(sortOrder){
+                case "Name":
+                    shows = shows.OrderBy(s => s.ShowName);
+                    break;
+                case "Date":
+                    shows = shows.OrderBy(s => s.ShowDate);
+                    break;
+                case "date_desc":
+                    shows = shows.OrderByDescending(s => s.ShowDate);
+                    break;
+                case "Price":
+                    shows = shows.OrderBy(s => (int)s.ShowPrice);
+                    break;
+                case "price_desc":
+                    shows = shows.OrderByDescending(s => (int)s.ShowPrice);
+                    break;
+                default:
+                    shows = shows.OrderBy(s => s.ShowName);
+                    break;
+            }
+            return View(await shows.ToListAsync());
+            //   return _context.Show != null ? 
+            //               View(await _context.Show.ToListAsync()) :
+            //               Problem("Entity set 'MvcActorContext.Show'  is null.");
         }
 
         // GET: Show/Details/5

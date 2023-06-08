@@ -10,6 +10,21 @@
     <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
+    <tr>
+        <th>Sort by</th>
+        <th>
+            @Html.ActionLink("Show Name", "Index", new { sortOrder = ViewBag.NameSortParam})
+        </th>
+        <th>
+            @Html.ActionLink("Show Price", "Index", new { sortOrder = ViewBag.PriceSortParam})
+        </th>
+        <th>
+            @Html.ActionLink("Show Date", "Index", new { sortOrder = ViewBag.DateSortParam})
+        </th>
+        <th></th>
+    </tr>
+</table>
+<table class="table">
     <thead>
         <tr>
             <th>

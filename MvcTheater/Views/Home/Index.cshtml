@@ -4,5 +4,15 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h3>This page allows you to see everything about our Theater!</h3>
+    @* <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
+    @{
+        if(!MvcTheater.Controllers.HomeController.logged_in){
+            <div>
+                <p>To login use link below</p>
+                <a asp-action="Login">Login</a>
+            </div>
+        }
+    }
+    
 </div>
