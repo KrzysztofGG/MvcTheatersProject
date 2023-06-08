@@ -109,7 +109,7 @@ namespace MvcTheater.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Age,Country,FavoriteMovie")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,APIKey")] User user)
         {
             if (id != user.Id)
             {
@@ -136,7 +136,7 @@ namespace MvcTheater.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(User);
+            return View(user);
         }
 
         // GET: User/Delete/5
@@ -148,7 +148,7 @@ namespace MvcTheater.Controllers
             }
 
             var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == id);
             if (user == null)
             {
                 return NotFound();
