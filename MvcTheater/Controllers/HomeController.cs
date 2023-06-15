@@ -40,7 +40,9 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult LoginForm(IFormCollection form){
         
+        Console.WriteLine(form["login"]);
         if(form["login"]=="admin"&&form["password"]=="admin"){
+            Console.WriteLine("XD");
             HttpContext.Session.SetString("logged_in", "True");
             HttpContext.Session.SetString("admin", "True");
             admin=true;
@@ -53,16 +55,19 @@ public class HomeController : Controller
         String password=form["password"];
         Console.WriteLine("---------------------------------------");
         // var user=!_context.User.(u=>u.Login==userId).FirstOrDefault()
-        var user=_context.User.Where(u=>u.Login==userId).First();
-        Console.WriteLine(user.Login);
-        Console.WriteLine(user.Password);
-        Console.WriteLine(password+"@@@@");
-        if(user.Password==form["password"]){
-            HttpContext.Session.SetString("logged_in", "True");
-            HttpContext.Session.SetString("admin", "False");
-            logged_in=true;
-            return RedirectToAction("Index");
+        
+        var user = _context.User.Where(u => u.Login == userId).FirstOrDefault();
+        if (user != null) {
+            Console.WriteLine(user.Login);
+            Console.WriteLine(user.Password);
+            Console.WriteLine(password+"@@@@");
+            if(user.Password==form["password"]){
+                HttpContext.Session.SetString("logged_in", "True");
+                HttpContext.Session.SetString("admin", "False");
+                logged_in=true;
+                return RedirectToAction("Index");
 
+            }
         }
         return RedirectToAction("Login");
         

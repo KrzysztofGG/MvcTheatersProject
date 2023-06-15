@@ -25,6 +25,7 @@ namespace MvcTheater.Controllers
             ViewBag.NameSortParam = String.IsNullOrEmpty(sortOrder) ? "Name" : "";
             ViewBag.DateSortParam = sortOrder == "Date" ? "date_desc" : "Date";
             ViewBag.PriceSortParam = sortOrder == "Price" ? "price_desc" : "Price";
+            ViewBag.OpinionsSortParam = sortOrder == "Opinions" ? "Opinions" : "Opinions";
             var shows = from s in _context.Show
                         select s;
             
@@ -43,6 +44,9 @@ namespace MvcTheater.Controllers
                     break;
                 case "price_desc":
                     shows = shows.OrderByDescending(s => (int)s.ShowPrice);
+                    break;
+                case "Opinions":
+                    shows = shows.OrderByDescending(s => _context.Opinion.Count(o => s.Id == o.Show.Id && o.IsPositive));
                     break;
                 default:
                     shows = shows.OrderBy(s => s.ShowName);
